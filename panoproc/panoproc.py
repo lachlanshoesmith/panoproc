@@ -1,11 +1,21 @@
 import sys
 import os
-import webview
+import logging
+import webbrowser
+import threading
+from flask import Flask
 
 VERSION = 0.1
 URL = 'https://github.com/lachlanshoesmith/panoproc'
 
 argv = sys.argv[1:]
+
+app = Flask(__name__)
+
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
+cli = sys.modules['flask.cli']
+cli.show_server_banner = lambda *x: None
 
 
 def check_args():
@@ -37,9 +47,13 @@ def get_images(path):
         os.path.join(path, f)) and (f.endswith('.png') or f.endswith('.jpg'))]
 
 
-def open_editor(images):
-    webview.create_window('panoproc', 'https://google.com')
-    webview.start()
+def open_website():
+    if '-s' not in argv:
+        print('Panoproc is running at http://localhost:5000.')
+        open_page = input(
+            'Would you like me to try open this for you [y/n]? ').lower()
+        if open_page.startswith('y'):
+            webbrowser.open('http://localhost:5000')
 
 
 if __name__ == '__main__':
@@ -49,4 +63,13 @@ if __name__ == '__main__':
     if not images:
         print(f'{sys.argv[0]}: {argv[0]} contains no .jpg and .png images')
         sys.exit(1)
-    open_editor(images)
+
+    server = threading.Thread(target=lambda: app.run(
+        host='0.0.0.0', port=5000, use_reloader=False))
+    server.start()
+
+    open_website()
+
+    print(f'Ready to process {len(images)} images')
+    print('Done - thanks for using Panoproc :)')
+    print('(Use Ctrl+C to close the server)')
