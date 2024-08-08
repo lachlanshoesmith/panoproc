@@ -18,6 +18,16 @@ cli = sys.modules['flask.cli']
 cli.show_server_banner = lambda *x: None
 
 
+@app.route('/')
+def index():
+    return open('panoproc/index.html', 'r').read()
+
+
+@app.route('/pannellum')
+def pannellum():
+    return open('panoproc/pannellum/pannellum.htm', 'r').read()
+
+
 def check_args():
     if len(argv) == 0 or len(argv) > 2:
         print(f'usage: {sys.argv[0]} directory <-s>')
@@ -51,9 +61,7 @@ def open_website():
     if '-s' not in argv:
         print('Panoproc is running at http://localhost:5000.')
         open_page = input(
-            'Would you like me to try open this for you [y/n]? ').lower()
-        if open_page.startswith('y'):
-            webbrowser.open('http://localhost:5000')
+            'Would you like me to try open the webpages [y/n]? ').lower()
 
 
 if __name__ == '__main__':
