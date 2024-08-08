@@ -1,7 +1,6 @@
 import sys
-import pygame
-from os import listdir
-from os.path import isdir, isfile, join
+import os
+import webview
 
 VERSION = 0.1
 URL = 'https://github.com/lachlanshoesmith/panoproc'
@@ -13,7 +12,7 @@ def check_args():
     if len(argv) == 0 or len(argv) > 2:
         print(f'usage: {sys.argv[0]} directory <-s>')
         sys.exit(1)
-    if not isdir(argv[0]):
+    if not os.path.isdir(argv[0]):
         print(f'{sys.argv[0]}: {argv[0]} does not exist')
         sys.exit(1)
 
@@ -34,30 +33,13 @@ by Lachlan Shoesmith, v{VERSION}
 
 
 def get_images(path):
-    return [f for f in listdir(path) if isfile(join(path, f) and (f.endswith('.png') or f.endswith('.jpg')))]
+    return [os.path.join(path, f) for f in os.listdir(path) if os.path.isfile(
+        os.path.join(path, f)) and (f.endswith('.png') or f.endswith('.jpg'))]
 
 
 def open_editor(images):
-    pygame.init()
-    screen = pygame.display.set_mode((1280, 720))
-    pygame.display.set_caption('panoproc')
-
-    clock = pygame.time.Clock()
-    running = True
-
-    print(images)
-
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-        screen.fill('purple')
-        pygame.display.flip()
-        clock.tick(30)
-
-    pygame.quit()
-    print('thanks for using panoproc :)')
-    sys.exit(0)
+    webview.create_window('panoproc', 'https://google.com')
+    webview.start()
 
 
 if __name__ == '__main__':
