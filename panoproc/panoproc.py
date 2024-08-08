@@ -25,7 +25,7 @@ def index():
 
 @app.route('/pannellum')
 def pannellum():
-    return open('panoproc/pannellum/pannellum.htm', 'r').read()
+    return open('panoproc/pannellum/pannellum.html', 'r').read()
 
 
 def check_args():
