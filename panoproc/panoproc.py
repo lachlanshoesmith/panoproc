@@ -3,7 +3,8 @@ import os
 import logging
 import webbrowser
 import threading
-from flask import Flask
+import shutil
+from flask import Flask, render_template, request
 
 VERSION = 0.1
 URL = 'https://github.com/lachlanshoesmith/panoproc'
@@ -17,15 +18,31 @@ log.setLevel(logging.ERROR)
 cli = sys.modules['flask.cli']
 cli.show_server_banner = lambda *x: None
 
+current_image = -1
+images = []
+
+
+def get_image(image, index):
+    global current_image
+    current_image = index
+    try:
+        shutil.copyfile(image, 'panoproc/static/pano.jpg')
+    except Exception as e:
+        print(e)
+        sys.exit(1)
+
+
+@app.route('/next_image', methods=['POST'])
+def next_image():
+    image = images[current_image + 1]
+    print(f'Processing {image}')
+    get_image(image, current_image + 1)
+    return 'OK'
+
 
 @app.route('/')
 def index():
-    return open('panoproc/index.html', 'r').read()
-
-
-@app.route('/pannellum')
-def pannellum():
-    return open('panoproc/pannellum/pannellum.html', 'r').read()
+    return render_template('index.html', image_name=images[current_image], image_number=current_image + 1, image_count=len(images))
 
 
 def check_args():
@@ -76,8 +93,10 @@ if __name__ == '__main__':
         host='0.0.0.0', port=5000, use_reloader=False))
     server.start()
 
-    open_website()
+    # open_website()
 
     print(f'Ready to process {len(images)} images')
-    print('Done - thanks for using Panoproc :)')
-    print('(Use Ctrl+C to close the server)')
+    next_image()
+
+    # print('Done - thanks for using Panoproc :)')
+    # print('(Use Ctrl+C to close the server)')

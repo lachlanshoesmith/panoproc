@@ -4,8 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>panoproc</title>
-    <link rel="stylesheet" href="pannellum/pannellum.css" />
-    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='pannellum/pannellum.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
   </head>
   <body>
     <header>
@@ -15,7 +21,8 @@
       <noscript>Please enable JavaScript.</noscript>
       <div id="panorama"></div>
       <section>
-        <p>File name:</p>
+        <p>File name: {{ image_name }}</p>
+        <p>Image {{ image_number }}/{{ image_count }}</p>
         <p>Other things:</p>
         <button>Submit</button>
       </section>
@@ -29,12 +36,12 @@
         </p>
       </section>
     </footer>
-    <script src="pannellum/libpannellum.js"></script>
-    <script src="pannellum/pannellum.js"></script>
+    <script src="{{ url_for('static', filename='pannellum/libpannellum.js') }}"></script>
+    <script src="{{ url_for('static', filename='pannellum/pannellum.js') }}"></script>
     <script>
       pannellum.viewer('panorama', {
         type: 'equirectangular',
-        panorama: 'https://pannellum.org/images/alma.jpg',
+        panorama: "{{ url_for('static', filename='pano.jpg') }}",
       });
     </script>
   </body>
