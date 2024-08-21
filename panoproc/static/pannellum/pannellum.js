@@ -897,18 +897,12 @@ window.pannellum = (function (window, document, undefined) {
       // Logs onto the document itself
       if (config.hotSpotDebug) {
         var coords = mouseEventToCoords(event);
-        console.log(
-          'Pitch: ' +
-            coords[0] +
-            ', Yaw: ' +
-            coords[1] +
-            ', Center Pitch: ' +
-            config.pitch +
-            ', Center Yaw: ' +
-            config.yaw +
-            ', HFOV: ' +
-            config.hfov
-        );
+        document.getElementById('pitch').innerText = coords[0];
+        document.getElementById('yaw').innerText = coords[1];
+        document.getElementById('centre-pitch').innerText = config.pitch;
+        document.getElementById('centre-yaw').innerText = config.yaw;
+        document.getElementById('hfov').innerText = config.hfov;
+        document.getElementById('add-click').removeAttribute('disabled');
       }
 
       // Turn off auto-rotation if enabled

@@ -22,6 +22,14 @@ button {
   font-family: inherit;
 }
 
+#submit {
+  margin-top: 32px;
+}
+
+.data {
+  margin-bottom: 32px;
+}
+
 header,
 footer {
   justify-content: center;
@@ -31,8 +39,8 @@ footer {
 }
 
 #panorama {
-  width: 64vw;
-  height: 36vw;
+  width: 50vw;
+  height: 37.5vw;
 }
 
 #map {
@@ -44,4 +52,13 @@ footer {
 th {
   text-align: left;
   padding-right: 8px;
+}
+
+section > :first-child {
+  margin-top: 0;
+}
+
+.data {
+  display: flex;
+  gap: 32px;
 }

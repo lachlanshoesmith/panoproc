@@ -24,41 +24,73 @@
     <main>
       <noscript>Please enable JavaScript.</noscript>
       <div id="panorama"></div>
-      <section>
-        <table>
-          <tr>
-            <th>File name</th>
-            <td id="filename">{{ image_name }}</td>
-          </tr>
-          <tr>
-            <th>Image</th>
-            <td>{{ image_number }}/{{ image_count }}</td>
-          </tr>
-          <tr>
-            <th>Title</th>
-            <td id="title">N/A</td>
-          </tr>
-          <tr>
-            <th>Building</th>
-            <td id="building">N/A</td>
-          </tr>
-          <tr>
-            <th>Floor</th>
-            <td id="floor">N/A</td>
-          </tr>
-          <tr>
-            <th>Latitude</th>
-            <td id="latitude">N/A</td>
-          </tr>
-          <tr>
-            <th>Longitude</th>
-            <td id="longitude">N/A</td>
-          </tr>
-        </table>
-
+      <div>
+        <div class="data">
+          <section>
+            <h2>Basic metadata</h2>
+            <table>
+              <tr>
+                <th>File name</th>
+                <td id="filename">{{ image_name }}</td>
+              </tr>
+              <tr>
+                <th>Image</th>
+                <td>{{ image_number }}/{{ image_count }}</td>
+              </tr>
+              <tr>
+                <th>Title</th>
+                <td id="title">N/A</td>
+              </tr>
+              <tr>
+                <th>Building</th>
+                <td id="building">N/A</td>
+              </tr>
+              <tr>
+                <th>Floor</th>
+                <td id="floor">N/A</td>
+              </tr>
+              <tr>
+                <th>Latitude</th>
+                <td id="latitude">N/A</td>
+              </tr>
+              <tr>
+                <th>Longitude</th>
+                <td id="longitude">N/A</td>
+              </tr>
+            </table>
+          </section>
+          <div class="last-clicked">
+            <section>
+              <h2>Last clicked</h2>
+              <table>
+                <tr>
+                  <th>Pitch</th>
+                  <td id="pitch">N/A</td>
+                </tr>
+                <tr>
+                  <th>Yaw</th>
+                  <td id="yaw">N/A</td>
+                </tr>
+                <tr>
+                  <th>Centre pitch</th>
+                  <td id="centre-pitch">N/A</td>
+                </tr>
+                <tr>
+                  <th>Centre yaw</th>
+                  <td id="centre-yaw">N/A</td>
+                </tr>
+                <tr>
+                  <th>HFOV</th>
+                  <td id="hfov">N/A</td>
+                </tr>
+              </table>
+              <button id="add-click">Add</button>
+          </div>
+          </section>
+        </div>
         <div id="map" class="mazemap"></div>
         <button id="submit">Submit and load next image</button>
-      </section>
+      </div>
     </main>
     <footer>
       <section>
@@ -88,10 +120,12 @@
     <script src="{{ url_for('static', filename='submit.js') }}"></script>
     <script>
       document.getElementById('submit').setAttribute('disabled', 'true');
+      document.getElementById('add-click').setAttribute('disabled', 'true');
       pannellum.viewer('panorama', {
         type: 'equirectangular',
         panorama: "{{ url_for('static', filename='pano.jpg') }}",
         autoLoad: true,
+        hotSpotDebug: true,
       });
     </script>
   </body>
