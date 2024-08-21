@@ -21,11 +21,11 @@ cli.show_server_banner = lambda *x: None
 
 current_image = -1
 images = []
-to_write = {}
+to_write = []
 
 
-def write_to_disk(fn):
-    with open(f'panoproc/{fn}.json', 'w') as f:
+def write_to_disk():
+    with open(f'panoproc/{argv[2]}.json', 'w') as f:
         json.dump(to_write, f)
 
 
@@ -41,14 +41,16 @@ def get_image(image, index):
 
 @app.route('/submit', methods=['POST'])
 def submit():
-    print(request.form)
+    to_write.append(request.json)
+    write_to_disk('data')
     next_image()
     return index()
 
 
 def next_image():
     image = images[current_image + 1]
-    print(f'Processing {image}')
+    if '-s' not in argv:
+        print(f'Processing {image}')
     get_image(image, current_image + 1)
 
 
@@ -58,11 +60,14 @@ def index():
 
 
 def check_args():
-    if len(argv) == 0 or len(argv) > 2:
-        print(f'usage: {sys.argv[0]} directory <-s>')
+    if len(argv) < 2 or len(argv) > 3 or argv[1] == '-s':
+        print(f'usage: {sys.argv[0]} directory outfile <-s>')
         sys.exit(1)
     if not os.path.isdir(argv[0]):
         print(f'{sys.argv[0]}: {argv[0]} does not exist')
+        sys.exit(1)
+    if os.path.exists(argv[1]):
+        print(f'{sys.argv[0]}: {argv[2]} already exists')
         sys.exit(1)
 
 
@@ -109,7 +114,9 @@ if __name__ == '__main__':
 
     open_website()
 
-    print(f'Ready to process {len(images)} images')
+    if '-s' not in argv:
+        print(f'Ready to process {len(images)} images')
+
     next_image()
 
     # print('Done - thanks for using Panoproc :)')
