@@ -25,7 +25,7 @@ to_write = []
 
 
 def write_to_disk():
-    with open(f'panoproc/{argv[2]}.json', 'w') as f:
+    with open(f'{argv[1]}', 'w') as f:
         json.dump(to_write, f)
 
 
@@ -42,7 +42,9 @@ def get_image(image, index):
 @app.route('/submit', methods=['POST'])
 def submit():
     to_write.append(request.json)
-    write_to_disk('data')
+    write_to_disk()
+    if '-s' not in argv:
+        print(f'Written {request.json} to {argv[1]}')
     next_image()
     return index()
 
@@ -60,14 +62,14 @@ def index():
 
 
 def check_args():
-    if len(argv) < 2 or len(argv) > 3 or argv[1] == '-s':
-        print(f'usage: {sys.argv[0]} directory outfile <-s>')
+    if len(argv) < 2 or len(argv) > 3 or argv[1] == '-s' or not argv[1].endswith('.json'):
+        print(f'usage: {sys.argv[0]} directory outfile.json <-s>')
         sys.exit(1)
     if not os.path.isdir(argv[0]):
         print(f'{sys.argv[0]}: {argv[0]} does not exist')
         sys.exit(1)
     if os.path.exists(argv[1]):
-        print(f'{sys.argv[0]}: {argv[2]} already exists')
+        print(f'{sys.argv[0]}: {argv[1]} already exists')
         sys.exit(1)
 
 
