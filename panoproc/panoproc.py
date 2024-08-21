@@ -4,6 +4,7 @@ import logging
 import webbrowser
 import threading
 import shutil
+import json
 from flask import Flask, render_template, request
 
 VERSION = 0.1
@@ -20,6 +21,12 @@ cli.show_server_banner = lambda *x: None
 
 current_image = -1
 images = []
+to_write = {}
+
+
+def write_to_disk(fn):
+    with open(f'panoproc/{fn}.json', 'w') as f:
+        json.dump(to_write, f)
 
 
 def get_image(image, index):
@@ -32,12 +39,17 @@ def get_image(image, index):
         sys.exit(1)
 
 
-@app.route('/next_image', methods=['POST'])
+@app.route('/submit', methods=['POST'])
+def submit():
+    print(request.form)
+    next_image()
+    return index()
+
+
 def next_image():
     image = images[current_image + 1]
     print(f'Processing {image}')
     get_image(image, current_image + 1)
-    return 'OK'
 
 
 @app.route('/')
@@ -79,6 +91,8 @@ def open_website():
         print('Panoproc is running at http://localhost:5000.')
         open_page = input(
             'Would you like me to try open the webpages [y/n]? ').lower()
+        if open_page == 'y':
+            webbrowser.open('http://localhost:5000')
 
 
 if __name__ == '__main__':
@@ -93,7 +107,7 @@ if __name__ == '__main__':
         host='0.0.0.0', port=5000, use_reloader=False))
     server.start()
 
-    # open_website()
+    open_website()
 
     print(f'Ready to process {len(images)} images')
     next_image()

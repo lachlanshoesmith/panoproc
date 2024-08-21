@@ -12,6 +12,10 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='styles.css') }}"
     />
+    <link
+      rel="stylesheet"
+      href="https://api.mazemap.com/js/v2.1.2/mazemap.min.css"
+    />
   </head>
   <body>
     <header>
@@ -20,12 +24,20 @@
     <main>
       <noscript>Please enable JavaScript.</noscript>
       <div id="panorama"></div>
-      <section>
+      <form action="/submit" method="POST">
         <p>File name: {{ image_name }}</p>
         <p>Image {{ image_number }}/{{ image_count }}</p>
-        <p>Other things:</p>
-        <button>Submit</button>
-      </section>
+        <p>
+          Latitude:
+          <span id="latitude">N/A</span>
+        </p>
+        <p>
+          Longitude:
+          <span id="longitude">N/A</span>
+        </p>
+        <div id="map" class="mazemap"></div>
+        <input type="submit" value="Submit" />
+      </form>
     </main>
     <footer>
       <section>
@@ -38,6 +50,11 @@
     </footer>
     <script src="{{ url_for('static', filename='pannellum/libpannellum.js') }}"></script>
     <script src="{{ url_for('static', filename='pannellum/pannellum.js') }}"></script>
+    <script
+      type="text/javascript"
+      src="https://api.mazemap.com/js/v2.1.2/mazemap.min.js"
+    ></script>
+    <script src="{{ url_for('static', filename='map.js') }}"></script>
     <script>
       pannellum.viewer('panorama', {
         type: 'equirectangular',

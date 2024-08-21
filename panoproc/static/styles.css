@@ -34,3 +34,9 @@ footer {
   width: 64vw;
   height: 36vw;
 }
+
+#map {
+  width: 30vw;
+  height: 40vh;
+  position: relative;
+}
