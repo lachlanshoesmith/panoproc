@@ -45,8 +45,17 @@ def submit():
     write_to_disk()
     if '-s' not in argv:
         print(f'Written {request.json} to {argv[1]}')
-    next_image()
-    return index()
+
+    if at_end():
+        done()
+
+    else:
+        next_image()
+        return index()
+
+
+def at_end():
+    return current_image == len(images) - 1
 
 
 def next_image():
@@ -102,6 +111,13 @@ def open_website():
             webbrowser.open('http://localhost:5000')
 
 
+def done():
+    if '-s' not in argv:
+        print('Done - thanks for using Panoproc :)')
+    print('(Press Ctrl+C to close the server)')
+    sys.exit(0)
+
+
 if __name__ == '__main__':
     check_args()
     splash()
@@ -120,6 +136,3 @@ if __name__ == '__main__':
         print(f'Ready to process {len(images)} images')
 
     next_image()
-
-    # print('Done - thanks for using Panoproc :)')
-    # print('(Use Ctrl+C to close the server)')

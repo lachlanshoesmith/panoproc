@@ -37,7 +37,6 @@ const onMapClick = (e) => {
     .then((poi) => {
       processPoiData(poi, lngLat);
       placePoiMarker(poi);
-      document.getElementById('submit').removeAttribute('disabled');
     })
     .catch(() => false);
 };
@@ -49,6 +48,7 @@ const setDefaults = () => {
 };
 
 const processPoiData = (poi, clickLngLat = null) => {
+  document.getElementById('submit').removeAttribute('disabled');
   if (!poi) {
     setDefaults();
     if (!clickLngLat) return;
