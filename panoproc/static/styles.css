@@ -40,3 +40,8 @@ footer {
   height: 40vh;
   position: relative;
 }
+
+th {
+  text-align: left;
+  padding-right: 8px;
+}

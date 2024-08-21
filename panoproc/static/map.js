@@ -13,6 +13,14 @@ const map = new Mazemap.Map({
   ],
 });
 
+const elems = {
+  latitude: document.getElementById('latitude'),
+  longitude: document.getElementById('longitude'),
+  title: document.getElementById('title'),
+  building: document.getElementById('building'),
+  floor: document.getElementById('floor'),
+};
+
 // Add zoom and rotation controls to the map.
 map.addControl(new Mazemap.mapboxgl.NavigationControl());
 
@@ -41,9 +49,24 @@ const onMapClick = (e) => {
     .catch(() => false);
 };
 
+const setDefaults = () => {
+  Object.keys(elems).forEach((key) => {
+    elems[key].innerText = 'N/A';
+  });
+};
+
 const processPoiData = (poi) => {
-  if (!poi) return false;
+  if (!poi) {
+    setDefaults();
+  }
+  const props = poi.properties;
   console.log(poi.properties);
+
+  elems['latitude'].innerText = props.point.coordinates[0];
+  elems['longitude'].innerText = props.point.coordinates[1];
+  elems['title'].innerText = props.title;
+  elems['building'].innerText = props.buildingName;
+  elems['floor'].innerText = props.floorName + ' - ' + props.zLevel;
 };
 
 const clearPoiMarker = (poi) => {

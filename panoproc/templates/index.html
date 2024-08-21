@@ -25,16 +25,37 @@
       <noscript>Please enable JavaScript.</noscript>
       <div id="panorama"></div>
       <form action="/submit" method="POST">
-        <p>File name: {{ image_name }}</p>
-        <p>Image {{ image_number }}/{{ image_count }}</p>
-        <p>
-          Latitude:
-          <span id="latitude">N/A</span>
-        </p>
-        <p>
-          Longitude:
-          <span id="longitude">N/A</span>
-        </p>
+        <table>
+          <tr>
+            <th>File name</th>
+            <td id="filename">{{ image_name }}</td>
+          </tr>
+          <tr>
+            <th>Image</th>
+            <td>{{ image_number }}/{{ image_count }}</td>
+          </tr>
+          <tr>
+            <th>Title</th>
+            <td id="title">N/A</td>
+          </tr>
+          <tr>
+            <th>Building</th>
+            <td id="building">N/A</td>
+          </tr>
+          <tr>
+            <th>Floor</th>
+            <td id="floor">N/A</td>
+          </tr>
+          <tr>
+            <th>Latitude</th>
+            <td id="latitude">N/A</td>
+          </tr>
+          <tr>
+            <th>Longitude</th>
+            <td id="longitude">N/A</td>
+          </tr>
+        </table>
+
         <div id="map" class="mazemap"></div>
         <input type="submit" value="Submit" />
       </form>
