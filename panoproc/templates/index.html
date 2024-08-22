@@ -25,7 +25,7 @@
       <noscript>Please enable JavaScript.</noscript>
       <div id="panorama"></div>
       <div>
-        <div class="data">
+        <div class="top">
           <section>
             <h2>Basic metadata</h2>
             <table>
@@ -64,6 +64,17 @@
               <h2>Last clicked</h2>
               <table>
                 <tr>
+                  <th>Image filename</th>
+                  <td>
+                    <input
+                      type="text"
+                      placeholder="cat.jpg"
+                      name="filename"
+                      id="hotspot_filename"
+                    />
+                  </td>
+                </tr>
+                <tr>
                   <th>Pitch</th>
                   <td id="pitch">N/A</td>
                 </tr>
@@ -84,12 +95,34 @@
                   <td id="hfov">N/A</td>
                 </tr>
               </table>
-              <button id="add-click">Add</button>
+              <button id="add-hotspot">Add</button>
+            </section>
           </div>
-          </section>
         </div>
-        <div id="map" class="mazemap"></div>
-        <button id="submit">Submit and load next image</button>
+        <div class="bottom">
+          <section>
+            <h2>Clickable spots</h2>
+            <div id="hotspots-container">
+              <table id="hotspots">
+                <thead>
+                  <tr>
+                    <th>Image</th>
+                    <th>Pitch</th>
+                    <th>Yaw</th>
+                    <th>Centre pitch</th>
+                    <th>Centre yaw</th>
+                    <th>HFOV</th>
+                  </tr>
+                </thead>
+                <tbody id="hotspots-body"></tbody>
+              </table>
+            </div>
+          </section>
+          <div>
+            <div id="map" class="mazemap"></div>
+            <button id="submit">Submit and load next image</button>
+          </div>
+        </div>
       </div>
     </main>
     <footer>
@@ -118,9 +151,10 @@
     </script>
     <script src="{{ url_for('static', filename='map.js') }}"></script>
     <script src="{{ url_for('static', filename='submit.js') }}"></script>
+    <script src="{{ url_for('static', filename='add_hotspot.js') }}"></script>
     <script>
       document.getElementById('submit').setAttribute('disabled', 'true');
-      document.getElementById('add-click').setAttribute('disabled', 'true');
+      document.getElementById('add-hotspot').setAttribute('disabled', 'true');
       pannellum.viewer('panorama', {
         type: 'equirectangular',
         panorama: "{{ url_for('static', filename='pano.jpg') }}",

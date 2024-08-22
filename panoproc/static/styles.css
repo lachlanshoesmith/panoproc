@@ -44,8 +44,8 @@ footer {
 }
 
 #map {
-  width: 30vw;
-  height: 40vh;
+  width: 20vw;
+  height: 30vh;
   position: relative;
 }
 
@@ -54,11 +54,19 @@ th {
   padding-right: 8px;
 }
 
-section > :first-child {
-  margin-top: 0;
-}
-
-.data {
+.top,
+.bottom {
   display: flex;
   gap: 32px;
+  margin-bottom: 32px;
+}
+
+#hotspots-container {
+  max-width: 20vw;
+  max-height: 20vh;
+  overflow: scroll;
+}
+
+#hotspots {
+  width: 100%;
 }

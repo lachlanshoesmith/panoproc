@@ -58,8 +58,6 @@ const processPoiData = (poi, clickLngLat = null) => {
   }
   const props = poi.properties;
 
-  console.log(props);
-
   elems['latitude'].innerText = props.point.coordinates[0];
   elems['longitude'].innerText = props.point.coordinates[1];
   elems['title'].innerText = props.title;

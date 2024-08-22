@@ -902,7 +902,7 @@ window.pannellum = (function (window, document, undefined) {
         document.getElementById('centre-pitch').innerText = config.pitch;
         document.getElementById('centre-yaw').innerText = config.yaw;
         document.getElementById('hfov').innerText = config.hfov;
-        document.getElementById('add-click').removeAttribute('disabled');
+        document.getElementById('add-hotspot').removeAttribute('disabled');
       }
 
       // Turn off auto-rotation if enabled

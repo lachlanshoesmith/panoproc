@@ -6,6 +6,7 @@ import threading
 import shutil
 import json
 from flask import Flask, render_template, request
+from pprint import pprint
 
 VERSION = 0.1
 URL = 'https://github.com/lachlanshoesmith/panoproc'
@@ -41,10 +42,21 @@ def get_image(image, index):
 
 @app.route('/submit', methods=['POST'])
 def submit():
+    res = request.json
+    for hotspot in res['hotspots']:
+        title = hotspot['title']
+        image_filename = os.path.join(argv[0], title)
+        if not os.path.exists(image_filename):
+            print(
+                f'{sys.argv[0]}: hotspot image filename {title} does not exist in {argv[0]}')
+            return index()
+
     to_write.append(request.json)
     write_to_disk()
     if '-s' not in argv:
-        print(f'Written {request.json} to {argv[1]}')
+        print(f'Written...')
+        pprint(res)
+        print(f'...to {argv[1]}\n')
 
     if at_end():
         done()
