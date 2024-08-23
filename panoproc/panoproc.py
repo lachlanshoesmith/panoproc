@@ -84,7 +84,8 @@ def submit():
                 f'{sys.argv[0]}: hotspot image filename {title} does not exist in {images_folder}')
             return index()
 
-    to_write.append(request.json)
+    res['filename'] = os.path.basename(images[current_image])
+    to_write.append(res)
     write_to_disk()
     if not silent:
         print(f'Written...')
