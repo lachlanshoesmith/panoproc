@@ -6,6 +6,9 @@ import threading
 import shutil
 import json
 import argparse
+import mozjpeg_lossless_optimization
+from io import BytesIO
+from PIL import Image
 from flask import Flask, render_template, request
 from pprint import pprint
 
@@ -100,10 +103,36 @@ def at_end():
     return current_image == len(images) - 1
 
 
+def compress_image(image):
+    if not os.path.exists(compressed_output_folder):
+        os.makedirs(compressed_output_folder)
+
+    jpeg_io = BytesIO()
+
+    with Image.open(image, 'r') as input_f:
+        input_f.convert('RGB').save(jpeg_io, 'JPEG', quality=70)
+
+    jpeg_io.seek(0)
+    input_bytes = jpeg_io.read()
+
+    output_bytes = mozjpeg_lossless_optimization.optimize(input_bytes)
+
+    with open(os.path.join(compressed_output_folder, os.path.basename(image)), 'wb') as output_f:
+        output_f.write(output_bytes)
+
+    if not silent:
+        print(
+            f'Compressed {os.path.basename(image)} -> {os.path.join(compressed_output_folder, os.path.basename(image))}')
+
+
 def next_image():
     image = images[current_image + 1]
     if not silent:
         print(f'Processing {image}')
+
+    if compressed_output_folder:
+        compress_image(image)
+
     get_image(image, current_image + 1)
 
 
