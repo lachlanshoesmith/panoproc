@@ -9,10 +9,10 @@ add location and pannellum-tour-related metadata to panoramas.
 
 ## usage
 
-`usage: panoproc.py directory outfile.json <-s> <-o output_folder>`
+`usage: panoproc [-h] [-s] [-o COMPRESSED_OUTPUT] directory outfile`
 
 * `-s` is a silent mode.
-* `-o` compresses panoramas with [mozjpeg](https://github.com/mozilla/mozjpeg), and it saves them in `output_folder`.
+* `-o` compresses panoramas with [mozjpeg](https://github.com/mozilla/mozjpeg), and it saves them in the directory specified as `COMPRESSED_OUTPUT`.
 
 > ⚠️ note that the browser-opening functionality (powered by the `webbrowser` module) will not work under wsl.
 
