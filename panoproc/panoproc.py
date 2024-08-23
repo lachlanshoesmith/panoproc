@@ -5,13 +5,12 @@ import webbrowser
 import threading
 import shutil
 import json
+import argparse
 from flask import Flask, render_template, request
 from pprint import pprint
 
 VERSION = 0.1
 URL = 'https://github.com/lachlanshoesmith/panoproc'
-
-argv = sys.argv[1:]
 
 app = Flask(__name__)
 
@@ -25,8 +24,39 @@ images = []
 to_write = []
 
 
+def get_images(path):
+    if not os.path.exists(path):
+        raise argparse.ArgumentTypeError(f'{path} does not exist')
+
+    if imgs := [os.path.join(path, f) for f in os.listdir(path) if os.path.isfile(
+            os.path.join(path, f)) and (f.endswith('.png') or f.endswith('.jpg'))]:
+        return imgs
+    else:
+        raise argparse.ArgumentTypeError(
+            f'{path} doesn\'t contain any .jpgs or .pngs')
+
+
+parser = argparse.ArgumentParser(
+    prog='panoproc',
+    description='Add metadata to (and optionally compress) panoramas, stored in a JSON file.',
+)
+parser.add_argument('directory', help='directory containing panoramas',
+                    type=str)
+parser.add_argument('outfile', help='output JSON file',
+                    type=argparse.FileType('w'))
+parser.add_argument('-s', '--silent', action='store_true', help='silent mode')
+parser.add_argument(
+    '-o', '--compressed-output', help='output folder for compressed panoramas', type=str)
+
+args = parser.parse_args()
+images_folder = args.directory
+json_outfile = args.outfile
+silent = args.silent
+compressed_output_folder = args.compressed_output
+
+
 def write_to_disk():
-    with open(f'{argv[1]}', 'w') as f:
+    with open(f'{json_outfile}', 'w') as f:
         json.dump(to_write, f)
 
 
@@ -45,18 +75,18 @@ def submit():
     res = request.json
     for hotspot in res['hotspots']:
         title = hotspot['title']
-        image_filename = os.path.join(argv[0], title)
+        image_filename = os.path.join(images_folder, title)
         if not os.path.exists(image_filename):
             print(
-                f'{sys.argv[0]}: hotspot image filename {title} does not exist in {argv[0]}')
+                f'{sys.argv[0]}: hotspot image filename {title} does not exist in {images_folder}')
             return index()
 
     to_write.append(request.json)
     write_to_disk()
-    if '-s' not in argv:
+    if not silent:
         print(f'Written...')
         pprint(res)
-        print(f'...to {argv[1]}\n')
+        print(f'...to {images_folder}\n')
 
     if at_end():
         done()
@@ -72,7 +102,7 @@ def at_end():
 
 def next_image():
     image = images[current_image + 1]
-    if '-s' not in argv:
+    if not silent:
         print(f'Processing {image}')
     get_image(image, current_image + 1)
 
@@ -82,20 +112,8 @@ def index():
     return render_template('index.html', image_name=images[current_image], image_number=current_image + 1, image_count=len(images))
 
 
-def check_args():
-    if len(argv) < 2 or len(argv) > 3 or argv[1] == '-s' or not argv[1].endswith('.json'):
-        print(f'usage: {sys.argv[0]} directory outfile.json <-s>')
-        sys.exit(1)
-    if not os.path.isdir(argv[0]):
-        print(f'{sys.argv[0]}: {argv[0]} does not exist')
-        sys.exit(1)
-    if os.path.exists(argv[1]):
-        print(f'{sys.argv[0]}: {argv[1]} already exists')
-        sys.exit(1)
-
-
 def splash():
-    if '-s' not in argv:
+    if not silent:
         print(f'''
   _____        _   _  ____  _____  _____   ____   _____
  |  __ \ /\   | \ | |/ __ \|  __ \|  __ \ / __ \ / ____|
@@ -109,13 +127,8 @@ by Lachlan Shoesmith, v{VERSION}
 ''')
 
 
-def get_images(path):
-    return [os.path.join(path, f) for f in os.listdir(path) if os.path.isfile(
-        os.path.join(path, f)) and (f.endswith('.png') or f.endswith('.jpg'))]
-
-
 def open_website():
-    if '-s' not in argv:
+    if not silent:
         print('Panoproc is running at http://localhost:5000.')
         open_page = input(
             'Would you like me to try open the webpages [y/n]? ').lower()
@@ -124,19 +137,15 @@ def open_website():
 
 
 def done():
-    if '-s' not in argv:
+    if not silent:
         print('Done - thanks for using Panoproc :)')
     print('(Press Ctrl+C to close the server)')
     sys.exit(0)
 
 
 if __name__ == '__main__':
-    check_args()
     splash()
-    images = get_images(argv[0])
-    if not images:
-        print(f'{sys.argv[0]}: {argv[0]} contains no .jpg and .png images')
-        sys.exit(1)
+    images = get_images(images_folder)
 
     server = threading.Thread(target=lambda: app.run(
         host='0.0.0.0', port=5000, use_reloader=False))
@@ -144,7 +153,7 @@ if __name__ == '__main__':
 
     open_website()
 
-    if '-s' not in argv:
+    if not silent:
         print(f'Ready to process {len(images)} images')
 
     next_image()
