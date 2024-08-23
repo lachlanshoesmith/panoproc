@@ -1,5 +1,6 @@
 # Panoproc-specific
 pano.jpg
+compress
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
